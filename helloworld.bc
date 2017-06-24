@@ -1,3 +1,6 @@
+// Null character
+push:0
+push:33
 push:100
 push:108
 push:114
@@ -9,4 +12,4 @@ push:108
 push:108
 push:101
 push:72
-printstr:11
+printstr

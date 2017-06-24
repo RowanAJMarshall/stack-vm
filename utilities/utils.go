@@ -7,7 +7,6 @@ import (
 
 type Stack []int
 type Bytefile []string
-
 type FrameStack struct {
 	mem Stack
 }
