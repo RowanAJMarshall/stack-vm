@@ -5,11 +5,26 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
-	"github.com/rowanajmarshall/stack-vm/utilities"
+
 	"github.com/rowanajmarshall/stack-vm/stack-functions"
+	"github.com/rowanajmarshall/stack-vm/utilities"
 )
 
 // Use this to run "go run !(*_test).go"
+
+// Enums representing various instructions
+const (
+	PUSH     = "push"
+	POP      = "pop"
+	MULTI    = "multi"
+	PRINT    = "print"
+	ADD      = "add"
+	IFEQ     = "ifeq"
+	DUP      = "dup"
+	RETURN   = "return"
+	PRINTSTR = "printstr"
+	END      = "end"
+)
 
 func main() {
 	progArgs := os.Args[1:]
@@ -36,31 +51,36 @@ func main() {
 		if strings.HasPrefix(command, "//") || command == "label" {
 			continue
 		}
-		if command == "push" {
+
+		switch command {
+		case PUSH:
 			builtins.SPush(&mem, arg[0])
-		} else if command == "pop" {
+		case POP:
 			builtins.SPop(&mem)
-		} else if command == "print" {
+		case MULTI:
+			builtins.SMultiply(&mem)
+		case PRINT:
 			builtins.SPrint(&mem)
-		} else if command == "add" {
+		case ADD:
 			builtins.SAdd(&mem)
-		} else if command == "ifeq" {
-			prev = i-1
+		case IFEQ:
+			prev = i - 1
 			if builtins.SPeek(&mem) == arg[0] {
 				i = labels[arg[1]]
 			}
-		} else if command == "dup" {
+		case DUP:
 			builtins.SDuplicate(&mem)
-		} else if command == "return" {
+		case RETURN:
 			i = prev
-		} else if command == "printstr" {
-			builtins.SPrintStr(&mem, arg[0])
-		} else if command == "end" {
+		case PRINTSTR:
+			builtins.SPrintStr(&mem)
+		case END:
 			break
 		}
 	}
 }
 
+// LoadFile Loads a given bytecode file with the URL s
 func LoadFile(s string) utils.Bytefile {
 	data, err := ioutil.ReadFile(s)
 	if err != nil {
